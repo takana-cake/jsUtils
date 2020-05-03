@@ -1,0 +1,66 @@
+<!-- v.20200504.0 -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>crypt</title>
+</head>
+<body>
+
+
+<table>
+<tr><td>PassPhrase</td><td><input type="text" id="passphrase" size="10" value=""></td></tr>
+<tr><td>Input</td><td><textarea rows="10" cols="120" id="input"></textarea></td></tr>
+<tr><td>Output</td><td><textarea rows="10" cols="120" id="output" readonly="readonly" onclick="this.focus();this.select()"></textarea></td></tr>
+<tr><td><input type="button" value="button" onclick="test()" style="width:150px">enc:<input type="radio" name="flag" id="encFlag" checked> dec:<input type="radio" name="flag" id="decFlag"></td></tr>
+</table>
+
+
+<div id="div0"></div>
+<div id="div1"></div>
+<div id="div2"></div>
+<div id="div3"></div>
+<div id="div4"></div>
+<div id="div5"></div>
+
+	<script src="js/cryptico.js">
+		//https://github.com/wwwtyro/cryptico/blob/master/cryptico.js
+	</script>
+	<script language="javascript" type="text/javascript">
+	function test() {
+		radio = document.getElementById("encFlag");
+		// RSA鍵の作り方
+		var PassPhrase = document.getElementById("passphrase").value;
+		var doc0= document.getElementById("div0");
+		doc0.innerHTML= "PassPhrase: " + PassPhrase;
+		var Bits = 1024;
+		var MattsRSAkey = cryptico.generateRSAKey(PassPhrase, Bits);
+		var doc1= document.getElementById("div1");
+		doc1.innerHTML= "MattsRSAkey: " + JSON.stringify(MattsRSAkey);
+
+		// 公開鍵の作り方
+		var MattsPublicKeyString = cryptico.publicKeyString(MattsRSAkey);
+		var doc2= document.getElementById("div2");
+		doc2.innerHTML= "MattsPublicKeyString: " + MattsPublicKeyString;
+
+		if (radio.checked) {
+			// 暗号化
+			var PlainText = document.getElementById("input").value;
+			var doc3= document.getElementById("div3");
+			doc3.innerHTML= "PlainText: " + PlainText;
+			var EncryptionResult = cryptico.encrypt(PlainText, MattsPublicKeyString);
+			var doc4= document.getElementById("div4");
+			doc4.innerHTML= "EncryptionResult: " + EncryptionResult.cipher;
+			document.getElementById("output").value = EncryptionResult.cipher;
+		}else {
+			// 復号化
+			var EncryptText = document.getElementById("input").value;
+			var DecryptionResult = cryptico.decrypt(EncryptText, MattsRSAkey);
+			var doc5= document.getElementById("div5");
+			doc5.innerHTML= "DecryptionResult: " + DecryptionResult.plaintext;
+			document.getElementById("output").value = DecryptionResult.plaintext;
+		}
+	}
+	</script>
+</body>
+</html>
