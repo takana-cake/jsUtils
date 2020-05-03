@@ -1,4 +1,4 @@
-<!-- v.20200504.0 -->
+<!-- v.20200504.1 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,15 +31,15 @@ function test() {
 	if (radio.checked) {
 		// encryption
 		var PlainText = document.getElementById("input").value;
-		var doc3= document.getElementById("div3");
-		doc3.innerHTML= "PlainText: " + PlainText;
-		var EncryptionResult = cryptico.encrypt(PlainText, MattsPublicKeyString);
+		var UrlEnc = encodeURI(PlainText);
+		var EncryptionResult = cryptico.encrypt(UrlEnc, MattsPublicKeyString);
 		document.getElementById("output").value = EncryptionResult.cipher;
 	}else {
 		// decryption
 		var EncryptText = document.getElementById("input").value;
 		var DecryptionResult = cryptico.decrypt(EncryptText, MattsRSAkey);
-		document.getElementById("output").value = DecryptionResult.plaintext;
+		var UrlDec = decodeURI(DecryptionResult.plaintext);
+		document.getElementById("output").value = UrlDec;
 	}
 }
 </script>
